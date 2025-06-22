@@ -16,6 +16,10 @@ type Header struct {
 	ImageSize      uint32
 }
 
+func NewHeader() *Header {
+	return &Header{}
+}
+
 type Image struct {
 	Width  int
 	Height int
