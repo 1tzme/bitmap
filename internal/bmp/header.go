@@ -113,3 +113,21 @@ func ReadHeader(path string) *Header {
 
 	return header
 }
+
+func buildHeader(img *Image) *Header {
+	width := img.Width
+	height := img.Height
+	rowSize := ((width*3 + 3) / 4) * 4
+	imageSize := uint32(rowSize + height)
+
+	return &Header{
+		FileType:       "BM",
+		HeaderSize:     bitmapFileHeaderSize,
+		DibHeaderSize:  bitmapInfoHeaderSize,
+		WidthInPixels:  int32(width),
+		HeightInPixels: int32(height),
+		PixelSize:      24,
+		ImageSize:      imageSize,
+		FileSize:       bitmapFileHeaderSize + bitmapInfoHeaderSize + imageSize,
+	}
+}
