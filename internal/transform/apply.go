@@ -77,6 +77,16 @@ func HandleApplyCommand() error {
 		bmp.Image = *cropped
 	}
 
+	if len(mirrors) > 0 {
+		if err := ApplyMirrors(&bmp.Image, mirrors); err != nil {
+			return fmt.Errorf("failed to apply mirrors: %v", err)
+		}
+	}
+
+	if len(rotates) > 0 {
+		bmp.Image = *applyRotations(bmp.Image, rotates)
+	}
+
 	bmp.Header.WidthInPixels = int32(bmp.Image.Width)
 	bmp.Header.HeightInPixels = int32(bmp.Image.Height)
 
@@ -85,7 +95,6 @@ func HandleApplyCommand() error {
 	}
 
 	b.WriteBMP(outputFile, bmp)
-
 	return nil
 }
 
