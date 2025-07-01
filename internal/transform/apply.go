@@ -80,6 +80,12 @@ func HandleApplyCommand() error {
 	bmp.Header.WidthInPixels = int32(bmp.Image.Width)
 	bmp.Header.HeightInPixels = int32(bmp.Image.Height)
 
+	if len(filters) > 0 {
+		applyFilters(&bmp.Image, filters)
+	}
+
+	b.WriteBMP(outputFile, bmp)
+
 	return nil
 }
 
