@@ -60,7 +60,25 @@ func HandleApplyCommand() error {
 	}
 
 	bmp := b.ReadBMP(sourceFile)
-	b.WriteBMP(outputFile, bmp)
+
+	if len(crops) > 0 {
+		var cropList []cropParams
+		for _, c := range crops {
+			param, err := parseCropParams(c)
+			if err != nil {
+				return fmt.Errorf("invalid crop parameters: %v", err)
+			}
+			cropList = append(cropList, param)
+		}
+		cropped, err := applyCrops(&bmp.Image, cropList)
+		if err != nil {
+			return fmt.Errorf("failed to apply crops: %v", err)
+		}
+		bmp.Image = *cropped
+	}
+
+	bmp.Header.WidthInPixels = int32(bmp.Image.Width)
+	bmp.Header.HeightInPixels = int32(bmp.Image.Height)
 
 	return nil
 }
